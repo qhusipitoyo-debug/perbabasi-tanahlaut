@@ -1,0 +1,22 @@
+{
+  "name": "Perbasasi Tanah Laut — Bendahara",
+  "short_name": "Perbasasi Bendahara",
+  "description": "Aplikasi Bendahara PERBASI Tanah Laut (Perserikatan Baseball Softball Seluruh Indonesia — Kabupaten Tanah Laut): kelola kas, transaksi, iuran anggota dan laporan keuangan.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#009444",
+  "lang": "id",
+  "dir": "ltr",
+  "categories": ["finance", "sports", "productivity"],
+  "id": "/",
+  "icons": [
+    {
+      "src": "/icons/logo.png",
+      "sizes": "640x640",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Perbasasi Tanah Laut — Aplikasi Bendahara</title>
+  <meta name="description" content="Aplikasi Bendahara PERBASI Tanah Laut: kelola kas, transaksi, iuran anggota dan laporan keuangan organisasi olahraga secara transparan dan akuntabel." />
+  <meta name="theme-color" content="#009444" />
+  <link rel="icon" type="image/png" href="/icons/logo.png" />
+  <link rel="apple-touch-icon" href="/icons/logo.png" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════ LAYAR LOGIN ═══════════════ -->
+  <section id="screen-login" class="screen screen-visible" aria-label="Halaman masuk">
+    <div class="auth-hero">
+      <div class="auth-hero-inner">
+        <div class="auth-brand">
+          <img src="/icons/logo.png" alt="Logo Perbasasi Tanah Laut" class="auth-logo" />
+          <div>
+            <div class="auth-org">PERBASI <span>Tanah Laut</span></div>
+            <div class="auth-org-sub">Perserikatan Baseball Softball Seluruh Indonesia</div>
+          </div>
+        </div>
+
+        <h1 class="auth-headline">Kelola keuangan klub<br /><em>lebih rapi, transparan</em><br />&amp; akuntabel.</h1>
+        <p class="auth-tagline">Satu aplikasi untuk bendahara: catat kas &amp; transaksi, pantau iuran anggota, cetak laporan keuangan kapan pun dibutuhkan.</p>
+
+        <ul class="auth-features">
+          <li><span class="feat-icon">✓</span> Kas &amp; multi-rekening dengan saldo real-time</li>
+          <li><span class="feat-icon">✓</span> Arus kas otomatis + grafik 6 bulan</li>
+          <li><span class="feat-icon">✓</span> Pencatatan iuran anggota per periode</li>
+          <li><span class="feat-icon">✓</span> Laporan &amp; ekspor CSV, siap cetak</li>
+        </ul>
+
+        <div class="auth-hero-footer">
+          <div class="ball-deco"></div>
+          <div class="auth-quote">“Baseball Softball bukan hanya soal pukulan keras — tapi juga ketertiban di balik layar.”</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-panel">
+      <form id="login-form" class="auth-card" autocomplete="on">
+        <img src="/icons/logo.png" alt="Logo" class="auth-card-logo" />
+        <h2 class="auth-card-title">Masuk ke Aplikasi</h2>
+        <p class="auth-card-sub">Portal Bendahara · PERBASI Tanah Laut</p>
+
+        <div id="login-error" class="alert alert-error hidden" role="alert"></div>
+
+        <label class="field">
+          <span class="field-label">Username</span>
+          <input id="login-username" name="username" type="text" class="input" placeholder="cth: bendahara" autocomplete="username" required autofocus />
+        </label>
+
+        <label class="field">
+          <span class="field-label">Password</span>
+          <span class="password-wrap">
+            <input id="login-password" name="password" type="password" class="input" placeholder="••••••••" autocomplete="current-password" required />
+            <button type="button" id="toggle-password" class="password-toggle" aria-label="Tampilkan password">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </span>
+        </label>
+
+        <button type="submit" id="login-submit" class="btn btn-primary btn-block btn-lg">
+          <span class="btn-label">Masuk</span>
+          <span class="btn-spinner hidden" aria-hidden="true"></span>
+        </button>
+
+        <!-- Kotak akun demo disembunyikan atas permintaan (kotak sebelumnya: admin/admin123 & bendahara/bendahara123) -->
+        <div class="auth-demo hidden" aria-hidden="true">
+          <strong>Akun awal:</strong> admin / <code>admin123</code> · bendahara / <code>bendahara123</code><br />
+          <span>Wajib ganti password setelah login pertama.</span>
+        </div>
+      </form>
+      <div class="auth-copyright">© <span id="login-year"></span> PERBASI Tanah Laut. Seluruh hak cipta dilindungi.</div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ SHELL APLIKASI ═══════════════ -->
+  <section id="screen-app" class="screen" aria-label="Aplikasi Bendahara">
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-brand">
+        <img src="/icons/logo.png" alt="Logo" class="sidebar-logo" />
+        <div class="sidebar-brand-text">
+          <div class="sidebar-title">PERBASI <span>Tanah Laut</span></div>
+          <div class="sidebar-subtitle">Aplikasi Bendahara</div>
+        </div>
+        <button id="sidebar-close" class="icon-btn sidebar-close" aria-label="Tutup menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Navigasi utama">
+        <div class="nav-section">MENU UTAMA</div>
+        <button class="nav-item" data-page="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          Dashboard
+        </button>
+        <button class="nav-item" data-page="transaksi">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+          Transaksi
+        </button>
+        <button class="nav-item" data-page="kas">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v7"/><path d="M16 12h5v4h-5a2 2 0 0 1 0-4z"/></svg>
+          Kas &amp; Kategori
+        </button>
+        <button class="nav-item" data-page="anggota">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Anggota
+        </button>
+        <button class="nav-item" data-page="iuran">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5h4a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3h4"/><path d="M12 7.5v9"/></svg>
+          Iuran Anggota
+        </button>
+        <button class="nav-item" data-page="persuratan">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg>
+          Persuratan
+        </button>
+        <button class="nav-item" data-page="laporan">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+          Laporan
+        </button>
+
+        <div class="nav-section">SISTEM</div>
+        <button class="nav-item" data-page="pengaturan">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Pengaturan
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="avatar" id="sidebar-avatar">A</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name" id="sidebar-user-name">—</div>
+            <div class="sidebar-user-role" id="sidebar-user-role">—</div>
+          </div>
+        </div>
+        <button id="btn-logout-sidebar" class="btn btn-ghost btn-block">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Keluar
+        </button>
+      </div>
+    </aside>
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <div class="app-main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button id="btn-burger" class="icon-btn topbar-burger" aria-label="Buka menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
+          </button>
+          <div>
+            <div class="topbar-title" id="topbar-title">Dashboard</div>
+            <div class="topbar-date" id="topbar-date">—</div>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button id="btn-theme" class="icon-btn" aria-label="Ganti tema gelap/terang">
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.07" y2="4.93"/></svg>
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+          <div class="topbar-user">
+            <div class="avatar avatar-sm" id="topbar-avatar">A</div>
+            <div class="topbar-user-meta">
+              <div class="topbar-user-name" id="topbar-user-name">—</div>
+              <div class="topbar-user-role" id="topbar-user-role">—</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main id="view" class="view" tabindex="-1"></main>
+    </div>
+  </section>
+
+  <!-- ═══════════════ MODAL GLOBAL ═══════════════ -->
+  <div id="modal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" data-modal-close></div>
+    <div class="modal-dialog" role="document">
+      <div class="modal-header">
+        <h3 id="modal-title">Judul</h3>
+        <button class="icon-btn" data-modal-close aria-label="Tutup">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div id="modal-body" class="modal-body"></div>
+      <div id="modal-footer" class="modal-footer"></div>
+    </div>
+  </div>
+
+  <div id="toast-wrap" class="toast-wrap" aria-live="polite"></div>
+
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>

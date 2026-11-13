@@ -1,0 +1,16 @@
+{
+  "name": "perbasasi-tanah-laut-bendahara",
+  "version": "1.0.0",
+  "description": "Aplikasi Bendahara PERBASI Tanah Laut — manajemen kas, transaksi, iuran anggota dan laporan keuangan. Backend vanilla Node.js (tanpa framework) dengan JWT, frontend PWA dinamis siap di-wrap ke Android.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "license": "MIT",
+  "author": "PERBASI Tanah Laut"
+}

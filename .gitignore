@@ -1,0 +1,7 @@
+node_modules/
+data/
+*.log
+.DS_Store
+deploy/cloudflared
+deploy/tunnel.log
+deploy/tunnel.pid
