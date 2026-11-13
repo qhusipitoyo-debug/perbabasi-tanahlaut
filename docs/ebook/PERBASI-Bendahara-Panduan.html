@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Panduan Aplikasi Bendahara — PERBASI Tanah Laut</title>
+<style>
+  :root {
+    --hijau: #009444;
+    --hijau-tua: #007a39;
+    --oranye: #f97316;
+    --oranye-tua: #ea580c;
+    --navy: #0f172a;
+    --abu: #475569;
+    --garis: #e2e8f0;
+    --kertas: #ffffff;
+    --panel: #f8fafc;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font-family: Georgia, 'Times New Roman', serif; color: var(--navy); background: #e9edf3; font-size: 15.5px; line-height: 1.65; }
+
+  /* ══════════ LAYOUT BUKU ══════════ */
+  .page { max-width: 880px; margin: 28px auto; background: var(--kertas); box-shadow: 0 10px 40px rgba(15,23,42,0.18); }
+  .halaman { padding: 54px 64px; }
+  @page { size: A4; margin: 0; }
+  @media print {
+    body { background: #fff; }
+    .page { max-width: none; margin: 0; box-shadow: none; }
+    .halaman { padding: 18mm 17mm; }
+    .cover { height: 297mm; }
+    .bab { page-break-before: always; }
+    .gambar, table, .kotak { page-break-inside: avoid; }
+    .no-print { display: none !important; }
+  }
+
+  /* ══════════ COVER ══════════ */
+  .cover {
+    background: radial-gradient(circle at 30% 25%, #164e2e 0%, #0f172a 55%), #0f172a;
+    color: #fff;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; gap: 0; position: relative; overflow: hidden; min-height: 900px;
+  }
+  .cover::before { content: ''; position: absolute; width: 560px; height: 560px; border: 2px solid rgba(249,115,22,0.25); border-radius: 50%; top: -160px; right: -160px; }
+  .cover::after { content: ''; position: absolute; width: 340px; height: 340px; border: 2px solid rgba(0,148,68,0.35); border-radius: 50%; bottom: -110px; left: -110px; }
+  .cover img.logo-cover { width: 190px; height: 190px; position: relative; filter: drop-shadow(0 12px 32px rgba(0,0,0,0.5)); margin-bottom: 34px; }
+  .cover .organisasi { font-size: 15px; letter-spacing: 0.28em; color: #4ade80; text-transform: uppercase; font-family: 'Segoe UI', Arial, sans-serif; font-weight: 700; }
+  .cover h1 { font-size: 46px; line-height: 1.15; margin: 14px 0 6px; letter-spacing: -0.01em; }
+  .cover h1 em { font-style: normal; color: #fb923c; }
+  .cover .sub { font-size: 17px; color: #cbd5e1; max-width: 520px; line-height: 1.5; font-style: italic; }
+  .cover .garis-cover { width: 120px; height: 3px; background: linear-gradient(90deg, transparent, var(--oranye), transparent); margin: 26px 0; }
+  .cover .edisi { font-family: 'Segoe UI', Arial, sans-serif; font-size: 12.5px; letter-spacing: 0.2em; color: #94a3b8; text-transform: uppercase; }
+  .cover .bottom { position: absolute; bottom: 26px; font-family: 'Segoe UI', Arial, sans-serif; font-size: 11px; color: #64748b; letter-spacing: 0.05em; }
+
+  /* ══════════ KOLOFON / PENGANTAR ══════════ */
+  h1.judul-bab { font-size: 30px; border-bottom: 3px solid var(--hijau); padding-bottom: 10px; margin-bottom: 16px; letter-spacing: -0.01em; color: var(--navy); }
+  h1.judul-bab .no-bab { color: var(--oranye-tua); font-family: 'Segoe UI', Arial, sans-serif; font-size: 14px; display: block; letter-spacing: 0.18em; margin-bottom: 4px; }
+  h2.sub-bab { font-size: 19px; margin: 22px 0 10px; color: var(--hijau-tua); }
+  p { margin-bottom: 11px; text-align: justify; }
+  ul.rapi, ol.rapi { margin: 6px 0 14px 26px; }
+  ul.rapi li, ol.rapi li { margin-bottom: 5px; text-align: justify; }
+  code { font-family: 'Cascadia Code', Consolas, monospace; background: #eef2f7; border: 1px solid var(--garis); border-radius: 5px; padding: 1px 6px; font-size: 12.5px; color: #b45309; }
+  .kotak { background: var(--panel); border: 1px solid var(--garis); border-left: 4px solid var(--hijau); border-radius: 8px; padding: 13px 17px; margin: 14px 0; font-size: 14.5px; }
+  .kotak.info { border-left-color: #2563eb; }
+  .kotak.peringatan { border-left-color: var(--oranye-tua); background: #fff7ed; }
+  .kotak.aman { border-left-color: var(--hijau); background: #f0fdf4; }
+  .kotak h3 { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; font-family: 'Segoe UI', Arial, sans-serif; margin-bottom: 6px; color: var(--abu); }
+
+  /* ══════════ DAFTAR ISI ══════════ */
+  .toc ol { list-style: none; margin: 18px 0; }
+  .toc li { display: flex; align-items: baseline; gap: 10px; padding: 7px 2px; border-bottom: 1px dotted var(--garis); font-size: 16px; }
+  .toc .no { font-family: 'Segoe UI', Arial, sans-serif; font-weight: 800; color: var(--hijau-tua); min-width: 38px; }
+  .toc .lampiran { color: var(--abu); font-style: italic; }
+
+  /* ══════════ GAMBAR / SCREENSHOT ══════════ */
+  .gambar { background: var(--panel); border: 1px solid var(--garis); border-radius: 10px; padding: 12px; margin: 16px 0; text-align: center; }
+  .gambar img { max-width: 100%; border-radius: 6px; border: 1px solid #cbd5e1; box-shadow: 0 4px 14px rgba(15,23,42,0.15); }
+  .gambar .caption { font-family: 'Segoe UI', Arial, sans-serif; font-size: 12px; color: var(--abu); margin-top: 9px; text-align: center; }
+  .gambar .caption b { color: var(--hijau-tua); }
+  .gambar.kecil img { max-width: 330px; }
+
+  /* ══════════ TABEL ══════════ */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13px; font-family: 'Segoe UI', Arial, sans-serif; }
+  th { background: var(--navy); color: #fff; text-align: left; padding: 9px 11px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+  td { border-bottom: 1px solid var(--garis); padding: 8px 11px; vertical-align: top; }
+  tr:nth-child(even) td { background: #f8fafc; }
+  .pil { display: inline-block; padding: 2px 10px; border-radius: 99px; font-size: 11px; font-weight: 700; }
+  .pil.hijau { background: #dcfce7; color: #15803d; }
+  .pil.merah { background: #fee2e2; color: #b91c1c; }
+  .pil.oranye { background: #ffedd5; color: #c2410c; }
+  .pil.biru { background: #dbeafe; color: #1d4ed8; }
+
+  .langkah { counter-reset: langkah; margin: 12px 0; }
+  .langkah .item { counter-increment: langkah; display: flex; gap: 12px; margin-bottom: 9px; }
+  .langkah .item::before { content: counter(langkah); flex: 0 0 28px; height: 28px; border-radius: 50%; background: var(--hijau); color: #fff; font-family: 'Segoe UI', Arial, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+
+  .footer-dok { margin-top: 34px; border-top: 1px solid var(--garis); padding-top: 12px; font-size: 11.5px; color: var(--abu); font-family: 'Segoe UI', Arial, sans-serif; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .qr-note { font-size: 12px; color: var(--abu); font-style: italic; }
+  .url-box { display: block; text-align: center; background: var(--navy); color: #4ade80; font-family: 'Cascadia Code', Consolas, monospace; padding: 12px; border-radius: 8px; margin: 12px 0; font-size: 15px; letter-spacing: 0.02em; word-break: break-all; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ COVER ══════════════ -->
+<section class="page cover">
+  <img class="logo-cover" src="images/logo.png" alt="Logo PERBASI Tanah Laut" />
+  <div class="organisasi">Perserikatan Baseball Softball<br>Seluruh Indonesia</div>
+  <div class="garis-cover"></div>
+  <h1>Panduan<br><em>Aplikasi Bendahara</em></h1>
+  <div class="sub">Buku panduan resmi pengurus — mengelola kas, transaksi, iuran anggota dan persuratan PERBASI Tanah Laut dengan rapi, transparan dan akuntabel.</div>
+  <div class="garis-cover"></div>
+  <div class="edisi">Edisi 1 · Tahun 2026 · Pelaihari</div>
+  <div class="bottom">PERBASI Tanah Laut — Pengurus Kabupaten Tanah Laut</div>
+</section>
+
+<!-- ══════════════ KOLOFON ══════════════ -->
+<section class="page halaman">
+  <h1 class="judul-bab"><span class="no-bab">Edisi Pertama · 2026</span>Kolofon</h1>
+  <p><strong>Panduan Aplikasi Bendahara — PERBASI Tanah Laut</strong> disusun sebagai pedoman resmi bagi Pengurus Kabupaten Tanah Laut (Perserikatan Baseball Softball Seluruh Indonesia) dalam mengoperasikan aplikasi pengelolaan keuangan dan persuratan organisasi secara digital.</p>
+  <p>Aplikasi ini dibangun menggunakan teknologi web modern tanpa biaya lisensi, dengan sistem keamanan <em>JSON Web Token</em> (JWT) dan penyimpanan data lokal (SQLite) sehingga seluruh data keuangan organisasi tetap berada di bawah kendali pengurus.</p>
+  <div class="kotak info">
+    <h3>Tentang tangkapan layar</h3>
+    Seluruh gambar pada buku ini diambil langsung dari aplikasi versi berjalan. Angka, nama, dan transaksi yang tampak hanyalah data contoh; tampilan dapat sedikit berbeda pada perangkat Anda.
+  </div>
+  <p style="text-align:center; margin-top: 40px;"><img src="images/logo.png" alt="Logo" style="width:110px;opacity:0.9" /></p>
+  <p style="text-align:center; font-size: 13px; color: var(--abu); margin-top: 8px;">PERSERIKATAN BASEBALL SOFTBALL SELURUH INDONESIA<br>KABUPATEN TANAH LAUT</p>
+  <div class="footer-dok"><span>PERBASI Tanah Laut — Dokumen internal organisasi</span><span>Edisi 1 · 2026</span></div>
+</section>
+
+<!-- ══════════════ PENGANTAR ══════════════ -->
+<section class="page halaman">
+  <h1 class="judul-bab"><span class="no-bab">Kata Pengantar</span>Untuk Para Pengurus</h1>
+  <p>Bapak dan Ibu pengurus yang kami hormati,</p>
+  <p>Puji syukur kita panjatkan ke hadirat Tuhan Yang Maha Esa atas karunia-Nya. Seiring kebutuhan organisasi olahraga yang semakin profesional, tata kelola keuangan dan administrasi persuratan tidak lagi bisa dilakukan dengan pola manual yang rawan kesalahan dan sulit diaudit.</p>
+  <p>Buku ini disusun agar seluruh pengurus — mulai dari bendahara, sekretaris, hingga ketua — dapat mengoperasikan <strong>Aplikasi Bendahara PERBASI Tanah Laut</strong> dengan percaya diri: dari cara masuk (login), mencatat transaksi, mengelola kas beberapa rekening sekaligus, menagih iuran anggota, menerbitkan nomor surat resmi secara otomatis, hingga mencetak laporan pertanggungjawaban.</p>
+  <p>Harapannya, aplikasi ini menjadi bukti bahwa PERBASI Tanah Laut dikelola secara <strong>transparan, akuntabel dan modern</strong> — dan setiap rupiah yang keluar dan masuk tercatat dengan jelas untuk dipertanggungjawabkan kepada seluruh anggota.</p>
+  <p style="margin-top:26px">Pelaihari, November 2026<br><br><br><strong>Pengurus Kabupaten Tanah Laut</strong><br>PERBASI — Perserikatan Baseball Softball Seluruh Indonesia</p>
+</section>
+
+<!-- ══════════════ DAFTAR ISI ══════════════ -->
+<section class="page halaman toc">
+  <h1 class="judul-bab"><span class="no-bab">Panduan</span>Daftar Isi</h1>
+  <ol>
+    <li><span class="no">01</span> Pendahuluan &amp; Gambaran Aplikasi</li>
+    <li><span class="no">02</span> Cara Masuk (Login) &amp; Keamanan Dasar</li>
+    <li><span class="no">03</span> Memasang di HP (PWA) &amp; Akses Secara Online</li>
+    <li><span class="no">04</span> Mengenal Dashboard Keuangan</li>
+    <li><span class="no">05</span> Mengelola Transaksi Keuangan</li>
+    <li><span class="no">06</span> Mengelola Kas &amp; Kategori</li>
+    <li><span class="no">07</span> Data Anggota</li>
+    <li><span class="no">08</span> Iuran Anggota</li>
+    <li><span class="no">09</span> Laporan Arus Kas &amp; Cetak Resmi</li>
+    <li><span class="no">10</span> Persuratan &amp; Penomoran Otomatis</li>
+    <li><span class="no">11</span> Pengaturan, Pengguna &amp; Backup Database</li>
+    <li><span class="no">12</span> Mode Gelap &amp; Kustomisasi Tampilan</li>
+    <li><span class="no">13</span> Tanya Jawab (FAQ) &amp; Solusi Masalah</li>
+    <li class="lampiran"><span class="no">A</span> Lampiran: Format Nomor Surat &amp; Daftar Bidang</li>
+    <li class="lampiran"><span class="no">B</span> Lampiran: Ringkasan Menu &amp; Hak Akses (Admin vs Bendahara)</li>
+  </ol>
+  <div class="kotak info">
+    <h3>Cara membaca buku ini</h3>
+    Setiap bab berisi langkah-langkah bernomor dan tangkapan layar. Kotak <strong>PERINGATAN</strong> berisi hal yang wajib diperhatikan (misalnya keamanan password); kotak <strong>INFO</strong> berisi penjelasan tambahan.
+  </div>
+</section>
+
+<!-- ══════════════ BAB 1 ══════════════ -->
+<section class="page halaman bab">
+  <h1 class="judul-bab"><span class="no-bab">Bab 1</span>Pendahuluan &amp; Gambaran Aplikasi</h1>
+  <p><strong>Aplikasi Bendahara PERBASI Tanah Laut</strong> adalah aplikasi resmi pengurus untuk mengelola seluruh urusan keuangan dan administrasi organisasi secara digital: dari kas dan transaksi, iuran anggota, hingga penerbitan nomor surat keluar dengan format resmi organisasi.</p>
+
+  <h2 class="sub-bab">1.1 Manfaat Aplikasi</h2>
+  <ul class="rapi">
+    <li><strong>Pencatatan keuangan rapi</strong> — setiap rupiah (pemasukan/pengeluaran) tercatat dengan tanggal, kategori, kas, dan bukti (no. bukti).</li>
+    <li><strong>Transparansi &amp; akuntabilitas</strong> — saldo setiap kas terhitung otomatis dari mutasi; grafik 6 bulan memudahkan rapat evaluasi.</li>
+    <li><strong>Penagihan iuran terukur</strong> — status lunas/belum per anggota per bulan, tinggal klik.</li>
+    <li><strong>Laporan resmi siap dicetak</strong> — laporan arus kas bisa langsung dicetak (A4) atau diunduh CSV untuk arsip/rapat.</li>
+    <li><strong>Administrasi surat otomatis</strong> — nomor surat keluar terbit otomatis dengan format resmi, misal <code>400.4.1/001/PERBASASI-TALA/2026</code>.</li>
+    <li><strong>Keamanan berlapis</strong> — login JWT, password ter-enkripsi (scrypt), pembatasan percobaan login, audit log.</li>
+  </ul>
+
+  <h2 class="sub-bab">1.2 Modul Utama Aplikasi</h2>
+  <table>
+    <thead><tr><th>Menu</th><th>Fungsi</th></tr></thead>
+    <tbody>
+      <tr><td>Dashboard</td><td>Ringkasan saldo, pemasukan/pengeluaran bulan berjalan, grafik 6 bulan, transaksi terbaru</td></tr>
+      <tr><td>Transaksi</td><td>Tambah/ubah/hapus pemasukan &amp; pengeluaran, filter, cari, export CSV</td></tr>
+      <tr><td>Kas &amp; Kategori</td><td>Kelola rekening kas (tunai/bank/e-wallet), kategori pemasukan/pengeluaran, bidang surat</td></tr>
+      <tr><td>Anggota</td><td>Data atlet, pelatih, dan pengurus</td></tr>
+      <tr><td>Iuran Anggota</td><td>Status iuran bulanan per anggota + rekap &amp; export CSV</td></tr>
+      <tr><td>Persuratan</td><td>Arsip surat keluar, generator &amp; terbitan nomor otomatis, cetak kop surat</td></tr>
+      <tr><td>Laporan</td><td>Laporan arus kas per periode — cetak A4 / unduh CSV</td></tr>
+      <tr><td>Pengaturan</td><td>Profil organisasi, keamanan (ganti password), kelola pengguna, audit log, backup database</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="sub-bab">1.3 Data tersimpan di mana?</h2>
+  <p>Seluruh data (transaksi, anggota, iuran, surat, pengguna) tersimpan dalam satu database <em>SQLite</em> di server aplikasi (<code>data/perbasasi.db</code>). Tidak ada data yang dikirim ke pihak ketiga. Karena itu <strong>backup berkala wajib dilakukan</strong> (lihat Bab 11) sehingga data aman dari kerusakan/pencurian perangkat.</p>
+
+  <div class="kotak">
+    <h3>Siapa boleh memakai?</h3>
+    Pengurus dengan akun resmi dari administrator organisasi. Ada dua peran: <span class="pil biru">ADMIN</span> (kelola pengguna, backup, hapus data) dan <span class="pil oranye">BENDAHARA</span> (operasional keuangan sehari-hari). Lihat Lampiran B untuk detail hak akses.
+  </div>
+</section>
+
+<!-- ══════════════ BAB 2 ══════════════ -->
+<section class="page halaman bab">
+  <h1 class="judul-bab"><span class="no-bab">Bab 2</span>Cara Masuk (Login) &amp; Keamanan Dasar</h1>
+
+  <h2 class="sub-bab">2.1 Halaman Masuk</h2>
+  <div class="gambar">
+    <img src="images/ebook-login.png" alt="Halaman login" />
+    <div class="caption"><b>Gambar 2.1</b> — Halaman masuk aplikasi (desktop)</div>
+  </div>
+  <div class="langkah">
+    <div class="item"><span>Buka aplikasi melalui alamat yang dibagikan pengurus, misal <code>http://localhost:8080</code> (di komputer sekretariat) atau URL daring yang diberikan administrator.</span></div>
+    <div class="item"><span>Ketik <strong>Username</strong> pada kolom USERNAME.</span></div>
+    <div class="item"><span>Ketik <strong>Password</strong> pada kolom PASSWORD — klik ikon mata untuk memperlihatkan/menyembunyikan ketikan.</span></div>
+    <div class="item"><span>Tekan tombol <strong>Masuk</strong>.</span></div>
+  </div>
+  <div class="kotak peringatan">
+    <h3>Keamanan wajib diketahui</h3>
+    <ul class="rapi" style="margin-bottom:0">
+      <li><strong>Password standar (admin123 / bendahara123) HANYA untuk instalasi pertama dan wajib langsung diganti</strong> melalui menu Pengaturan → Keamanan.</li>
+      <li>Setelah <strong>10 kali salah memasukkan password</strong> dalam 10 menit, akun Anda diblokir sementara oleh sistem.</li>
+      <li>Sesi login berakhir otomatis setelah 12 jam — cukup login kembali.</li>
+      <li>Jangan pernah membagikan password Anda — termasuk kepada sesama pengurus. Setiap orang punya akun sendiri.</li>
+    </ul>
+  </div>
+
+  <h2 class="sub-bab">2.2 Ganti Password</h2>
+  <div class="langkah">
+    <div class="item"><span>Klik menu <strong>Pengaturan</strong> di sidebar → tab <strong>Keamanan</strong>.</span></div>
+    <div class="item"><span>Isi: <strong>Password Lama</strong>, <strong>Password Baru</strong> (minimal 6 karakter), dan konfirmasinya.</span></div>
+    <div class="item"><span>Klik <strong>Ubah Password</strong> — selesai.</span></div>
+  </div>
+
+  <h2 class="sub-bab">2.3 Keluar dari Aplikasi</h2>
+  <p>Klik tombol <strong>Keluar</strong> di bagian bawah sidebar (atau ikon logout di pojok). Selalu keluar jika memakai komputer bersama.</p>
+
+  <div class="kotak aman">
+    <h3>Praktik baik</h3>
+    Gunakan password minimal 8 karakter kombinasi huruf &amp; angka, contoh: <code>Talat2026!basket</code>. Jangan gunakan tanggal lahir yang mudah ditebak.
+  </div>
+</section>
+
+<!-- ══════════════ BAB 3 ══════════════ -->
+<section class="page halaman bab">
+  <h1 class="judul-bab"><span class="no-bab">Bab 3</span>Memasang di HP (PWA) &amp; Akses Online</h1>
+  <p>Aplikasi ini adalah <strong>Progressive Web App (PWA)</strong> — artinya bisa dipasang ke layar utama HP seperti aplikasi asli, tanpa perlu Play Store.</p>
+
+  <h2 class="sub-bab">3.1 Memasang di Android (Chrome)</h2>
+  <div class="gambar kecil">
+    <img src="images/ebook-mobile.png" alt="Tampilan di HP" />
+    <div class="caption"><b>Gambar 3.1</b> — Tampilan dashboard di layar HP</div>
+  </div>
+  <div class="langkah">
+    <div class="item"><span>Buka alamat aplikasi di <strong>Google Chrome</strong> pada HP Anda.</span></div>
+    <div class="item"><span>Ketuk menu <strong>⋮</strong> (tiga titik) di pojok kanan atas.</span></div>
+    <div class="item"><span>Pilih <strong>Tambahkan ke layar utama</strong> (atau <em>Install app</em>).</span></div>
+    <div class="item"><span>Ikon <strong>Perbasasi Bendahara</strong> muncul di layar HP — buka dari sana, tampil layar penuh seperti aplikasi native.</span></div>
+  </div>
+
+  <h2 class="sub-bab">3.2 Akses dari mana saja (online)</h2>
+  <p>Saat aplikasi ditayangkan secara daring (hosting), seluruh pengurus bisa mengakses dari mana pun tanpa terbatas jaringan kantor:</p>
+  <div class="url-box">https://goes-habitat-tile-cylinder.trycloudflare.com</div>
+  <p class="qr-note">* URL daring dapat berubah sesuai konfigurasi server dan hanya dibagikan kepada pengurus internal. Jika URL tidak terbuka, hubungi administrator TI organisasi.</p>
+  <div class="kotak peringatan">
+    <h3>Aturan penggunaan daring</h3>
+    <ul class="rapi" style="margin-bottom:0">
+      <li>Bagikan alamat dan akun hanya kepada pengurus yang berwenang.</li>
+      <li>Hindari masuk dari Wi-Fi publik yang tidak terpercaya (kafe, terminal, dll).</li>
+      <li>Jangan menyimpan password di browser komputer bersama.</li>
+    </ul>
+  </div>
+
+  <h2 class="sub-bab">3.3 Akses dari komputer sekretariat (jaringan lokal)</h2>
+  <p>Di komputer sekretariat aplikasi berjalan di <code>http://localhost:8080</code>. Komputer lain dalam satu Wi-Fi/LAN kantor dapat membuka lewat alamat IP komputer server, misalnya <code>http://192.168.100.5:8080</code> — mintalah alamat persisnya kepada administrator.</p>
+</section>
+
+<!-- ══════════════ BAB 4 ══════════════ -->
+<section class="page halaman bab">
+  <h1 class="judul-bab"><span class="no-bab">Bab 4</span>Mengenal Dashboard Keuangan</h1>
+  <div class="gambar">
+    <img src="images/ebook-dashboard.png" alt="Dashboard" />
+    <div class="caption"><b>Gambar 4.1</b> — Dashboard utama aplikasi</div>
+  </div>
+  <p>Dashboard menampilkan kondisi keuangan organisasi sekilas pandang, setiap kali dibuka:</p>
+  <table>
+    <thead><tr><th>Bagian</th><th>Isi</th></tr></thead>
+    <tbody>
+      <tr><td>Saldo Total</td><td>Jumlah seluruh saldo kas (tunai + rekening bank + e-wallet) — dihitung otomatis dari mutasi</td></tr>
+      <tr><td>Pemasukan Bulan Ini</td><td>Total seluruh transaksi pemasukan bulan berjalan</td></tr>
+      <tr><td>Pengeluaran Bulan Ini</td><td>Total seluruh transaksi pengeluaran bulan berjalan</td></tr>
+      <tr><td>Iuran Terkumpul</td><td>Total iuran yang tercatat lunas bulan berjalan + jumlah anggota aktif</td></tr>
+      <tr><td>Grafik Arus Kas 6 Bulan</td><td>Perbandingan pemasukan (hijau) vs pengeluaran (merah) per bulan</td></tr>
+      <tr><td>Pengeluaran per Kategori</td><td>Diagram donat: pos pengeluaran terbesar bulan ini</td></tr>
+      <tr><td>Transaksi Terbaru</td><td>8 transaksi terakhir — klik “Lihat semua” untuk membuka menu Transaksi</td></tr>
+      <tr><td>Saldo per Kas</td><td>Saldo rinci tiap rekening/dompet kas</td></tr>
+    </tbody>
+  </table>
+  <div class="kotak info">
+    <h3>Tips untuk rapat</h3>
+    Cukup screenshot halaman dashboard saat rapat pengurus untuk laporan singkat — semua angkanya sudah mengikuti data terakhir.
+  </div>
+</section>
+
+<!-- ══════════════ BAB 5 ══════════════ -->
+<section class="page halaman bab">
+  <h1 class="judul-bab"><span class="no-bab">Bab 5</span>Mengelola Transaksi Keuangan</h1>
+  <div class="gambar">
+    <img src="images/ebook-transaksi.png" alt="Menu transaksi" />
+    <div class="caption"><b>Gambar 5.1</b> — Menu Transaksi dengan filter dan ringkasan</div>
+  </div>
+
+  <h2 class="sub-bab">5.1 Menambah transaksi</h2>
+  <div class="langkah">
+    <div class="item"><span>Klik <strong>Tambah Transaksi</strong> di kanan atas.</span></div>
+    <div class="item"><span>Pilih <strong>Tipe</strong>: <span class="pil hijau">Pemasukan</span> atau <span class="pil merah">Pengeluaran</span>.</span></div>
+    <div class="item"><span>Isi <strong>Nominal</strong> (Rp, tanpa titik/koma — cukup angka), <strong>Tanggal</strong>, pilih <strong>Kas</strong> dan <strong>Kategori</strong> sesuai tipe.</span></div>
+    <div class="item"><span>Isi <strong>No. Bukti</strong> bila ada (opsional) dan <strong>Keterangan</strong> yang jelas — misal “Setoran iuran bulan Oktober — rekening BRI”.</span></div>
+    <div class="item"><span>Klik <strong>Simpan Transaksi</strong>. Saldo kas langsung diperbarui.</span></div>
+  </div>
+
+  <h2 class="sub-bab">5.2 Mencari &amp; memfilter</h2>
+  <p>Gunakan kotak pencarian (keterangan / no bukti / kategori) dan filter tipe, kas, kategori, serta rentang tanggal. Ringkasan <strong>Total Pemasukan / Pengeluaran / Selisih</strong> mengikuti filter yang aktif.</p>
+
+  <h2 class="sub-bab">5.3 Mengubah &amp; menghapus</h2>
+  <p>Klik ikon pensil (ubah) atau tempat sampah (hapus) pada baris transaksi. Hapus meminta konfirmasi dan tidak bisa dibatalkan — tercatat di audit log.</p>
+
+  <h2 class="sub-bab">5.4 Export CSV</h2>
+  <p>Klik tombol <strong>CSV</strong> untuk mengunduh transaksi sesuai periode filter (bisa dibuka di Microsoft Excel / LibreOffice Calc).</p>
+  <div class="kotak info">
+    <h3>Catatan akuntansi sederhana</h3>
+    Setiap uang masuk di organisasi <em>wajib</em> dicatat sebagai pemasukan <em>pada saat diterima</em>, dan setiap uang keluar dicatat sebagai pengeluaran. Jangan menumpuk struk untuk diinput belakangan — input segera, sekecil apa pun nominalnya.
+  </div>
+</section>
+
+<!-- ══════════════ BAB 6 ══════════════ -->
+<section class="page halaman bab">
+  <h1 class="judul-bab"><span class="no-bab">Bab 6</span>Mengelola Kas &amp; Kategori</h1>
+  <div class="gambar">
+    <img src="images/ebook-kas.png" alt="Kas dan kategori" />
+    <div class="caption"><b>Gambar 6.1</b> — Kelola kas, kategori pemasukan/pengeluaran, dan bidang surat</div>
+  </div>
+  <h2 class="sub-bab">6.1 Kas (multi-rekening)</h2>
+  <p>Organisasi dapat memiliki beberapa kas sekaligus, misalnya <em>Kas Tunai Sekretariat</em>, <em>Bank BRI Perbasasi</em>, atau <em>E-Wallet</em>. Setiap kas memiliki <strong>saldo awal</strong> dan saldonya terhitung otomatis dari seluruh transaksi yang tercatat (masuk − keluar).</p>
+  <div class="langkah">
+    <div class="item"><span>Klik <strong>+ Kas</strong> → isi nama kas, tipe (kas tunai / rekening bank / e-wallet / lainnya), saldo awal, catatan → Simpan.</span></div>
+    <div class="item"><span>Ubah dengan ikon pensil atau hapus dengan ikon tempat sampah (hanya kas yang belum dipakai transaksi dapat dihapus).</span></div>
+  </div>
+
+  <h2 class="sub-bab">6.2 Kategori transaksi</h2>
+  <p>Di kolom <strong>Pemasukan</strong> dan <strong>Pengeluaran</strong> Anda dapat menambah/mengubah/menghapus kategori (misal: “Iuran Anggota”, “Donasi &amp; Sponsor”, “Konsumsi”). Kategori membantu dashboard menampilkan diagram pengeluaran per pos biaya. Kategori yang masih dipakai transaksi tidak bisa dihapus.</p>
+
+  <h2 class="sub-bab">6.3 Bidang surat</h2>
+  <p>Kolom <strong>Bidang Surat</strong> mengelola klasifikasi surat keluar untuk modul Persuratan (lihat Bab 10). Lima bidang bawaan: Bidang Olahraga (OR), Bidang Kepelatihan (KP), Bidang Wasit &amp; Pertandingan (WP), Bidang Pembinaan &amp; Usia Dini (PB), Administrasi &amp; Kesekretariatan (ADM). Dapat ditambah/diubah/dihapus sesuai kebutuhan organisasi.</p>
+</section>
+
+<!-- ══════════════ BAB 7 ══════════════ -->
+<section class="page halaman bab">
+  <h1 class="judul-bab"><span class="no-bab">Bab 7</span>Data Anggota</h1>
+  <p>Menu <strong>Anggota</strong> dipakai sebagai database induk atlet, pelatih dan pengurus — sekaligus menjadi dasar penagihan iuran (Bab 8).</p>
+  <h2 class="sub-bab">7.1 Menambah anggota</h2>
+  <div class="langkah">
+    <div class="item"><span>Klik <strong>Tambah Anggota</strong>.</span></div>
+    <div class="item"><span>Isi: <strong>No. Anggota</strong> (opsional, misal PB-007), <strong>Nama lengkap</strong> (wajib), <strong>Tanggal bergabung</strong>, <strong>Posisi/Jabatan</strong> (Guard, Pelatih, dll), <strong>Tim/Kelompok</strong>, <strong>Telepon</strong>.</span></div>
+    <div class="item"><span>Simpan — anggota langsung dapat dicatat iurannya.</span></div>
+  </div>
+  <h2 class="sub-bab">7.2 Mencari &amp; status keanggotaan</h2>
+  <p>Gunakan kotak pencarian dan filter status (Aktif/Nonaktif). Anggota nonaktif tidak muncul di daftar penagihan iuran dan tidak dihitung dalam statistik anggota aktif. Gunakan status ini (bukan menghapus) ketika anggota keluar/nonaktif — riwayat iurannya tetap aman.</p>
+  <div class="kotak info">
+    <h3>Struktur data yang disarankan</h3>
+    <ul class="rapi" style="margin-bottom:0">
+      <li><strong>Posisi/Jabatan</strong>: posisi bermain (Guard/Center/Forward), peran pelatih (Pelatih Tim Putri), atau jabatan pengurus (Bendahara, Sekretaris).</li>
+      <li><strong>Tim/Kelompok</strong>: Tim Putra Elite, Tim Putri, Tim Junior, atau Pengurus untuk non-atlet.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══════════════ BAB 8 ══════════════ -->
+<section class="page halaman bab">
+  <h1 class="judul-bab"><span class="no-bab">Bab 8</span>Iuran Anggota</h1>
+  <div class="gambar">
+    <img src="images/ebook-iuran.png" alt="Menu iuran" />
+    <div class="caption"><b>Gambar 8.1</b> — Menu Iuran Anggota per periode</div>
+  </div>
+  <h2 class="sub-bab">8.1 Mencatat pembayaran iuran</h2>
+  <div class="langkah">
+    <div class="item"><span>Pilih <strong>Periode</strong> bulan di kanan atas (contoh: November 2026).</span></div>
+    <div class="item"><span>Untuk anggota yang sudah membayar, klik <strong>Catat Bayar</strong>.</span></div>
+    <div class="item"><span>Isi nominal (otomatis terisi sesuai <em>Nominal Iuran Default</em> di Pengaturan), tanggal bayar, dan catatan (misal “transfer BRI a.n. Bendahara”).</span></div>
+    <div class="item"><span>Simpan — anggota langsung berstatus <span class="pil hijau">LUNAS</span>.</span></div>
+  </div>
+  <h2 class="sub-bab">8.2 Membatalkan pembayaran</h2>
+  <p>Jika terjadi kesalahan input, klik tombol <strong>Batalkan</strong> pada baris anggota tersebut — sistem meminta konfirmasi. Data iuran periode itu dihapus dan anggota kembali berstatus <span class="pil merah">BELUM</span>.</p>
+  <h2 class="sub-bab">8.3 Ringkasan &amp; export</h2>
+  <p>Empat kotak ringkasan (total anggota, lunas, belum, terkumpul) dan progress bar muncul di atas tabel. Tombol <strong>Export CSV</strong> mengunduh daftar iuran periode berjalan untuk diarsip/rapat.</p>
+  <div class="kotak info">
+    <h3>Tips penagihan</h3>
+    Lakukan pengecekan iuran tiap akhir minggu pertama bulan berjalan, lalu umumkan di grup resmi — jumlah <em>Belum Bayar</em> yang tampil di layar bisa langsung dijadikan daftar tagih.
+  </div>
+</section>
+
+<!-- ══════════════ BAB 9 ══════════════ -->
+<section class="page halaman bab">
+  <h1 class="judul-bab"><span class="no-bab">Bab 9</span>Laporan Arus Kas &amp; Cetak Resmi</h1>
+  <div class="gambar">
+    <img src="images/ebook-laporan.png" alt="Laporan arus kas" />
+    <div class="caption"><b>Gambar 9.1</b> — Laporan Arus Kas dengan ringkasan periode</div>
+  </div>
+  <h2 class="sub-bab">9.1 Menampilkan laporan</h2>
+  <div class="langkah">
+    <div class="item"><span>Klik menu <strong>Laporan</strong> di sidebar.</span></div>
+    <div class="item"><span>Pilih rentang <strong>Dari</strong>–<strong>Sampai</strong> (default: awal bulan sampai hari ini) → klik <strong>Tampilkan</strong>.</span></div>
+    <div class="item"><span>Laporan berisi rincian transaksi per tanggal beserta total pemasukan, pengeluaran dan selisih periode.</span></div>
+  </div>
+  <h2 class="sub-bab">9.2 Cetak resmi (A4)</h2>
+  <p>Klik tombol <strong>Cetak</strong> — tampilan laporan berubah menjadi dokumen bersih berkop <strong>PERBASI TANAH LAUT</strong> lengkap dengan periode, total, selisih dan tanggal cetak, siap ditandatangani pada rapat pengurus. Gunakan ukuran kertas A4.</p>
+  <h2 class="sub-bab">9.3 Unduh CSV</h2>
+  <p>Klik tombol <strong>CSV</strong> untuk mengunduh rincian laporan sebagai file spreadsheet.</p>
+  <div class="kotak peringatan">
+    <h3>Lampiran wajib rapat</h3>
+    Untuk rapat evaluasi bulanan, cetak (1) Laporan Arus Kas periode berjalan, dan (2) export CSV iuran — keduanya cukup dari layar ini, tanpa rekap manual.
+  </div>
+</section>
+
+<!-- ══════════════ BAB 10 ══════════════ -->
+<section class="page halaman bab">
+  <h1 class="judul-bab"><span class="no-bab">Bab 10</span>Persuratan &amp; Penomoran Otomatis</h1>
+  <p>Menu <strong>Persuratan</strong> mengelola seluruh <strong>surat keluar</strong> organisasi. Nomor surat diterbitkan <strong>otomatis oleh sistem</strong> dengan format resmi organisasi:</p>
+  <div class="url-box" style="color:#fdba74">400.4.1 / 001 / PERBASASI-TALA / 2026</div>
+  <p style="text-align:center; font-size:12px; color:var(--abu)">400.4.1 = kode klasifikasi surat · 001 = nomor urut (reset tiap tahun) · PERBASASI-TALA = kode organisasi · 2026 = tahun</p>
+
+  <div class="gambar">
+    <img src="images/ebook-persuratan.png" alt="Menu persuratan" />
+    <div class="caption"><b>Gambar 10.1</b> — Generator nomor &amp; arsip surat keluar</div>
+  </div>
+
+  <h2 class="sub-bab">10.1 Membuat surat baru</h2>
+  <div class="langkah">
+    <div class="item"><span>Klik <strong>Buat Surat Baru</strong> (atau tombol <strong>Buat Surat Nomor Ini</strong> pada kartu generator).</span></div>
+    <div class="item"><span>Isi <strong>Tanggal Surat</strong>, <strong>Sifat</strong> (Biasa/Penting/Segera/Rahasia), <strong>Perihal</strong>, <strong>Ditujukan Kepada (Yth.)</strong>, pilih <strong>Bidang</strong>, <strong>Lampiran</strong>, dan <strong>Isi Surat</strong> (yang akan tercetak).</span></div>
+    <div class="item"><span>Simpan — nomor terbit otomatis dan tampil sebagai notifikasi, contoh: “Surat terbit dengan nomor 400.4.1/001/PERBASASI-TALA/2026”.</span></div>
+  </div>
+
+  <h2 class="sub-bab">10.2 Generator nomor (tanpa membuat surat)</h2>
+  <p>Kartu gelap di atas halaman menampilkan <strong>nomor berikutnya</strong> untuk tahun yang dipilih. Tombol <strong>Salin Nomor</strong> menyalinnya ke clipboard — berguna bila nomor dipakai untuk dokumen lain di luar aplikasi.</p>
+
+  <h2 class="sub-bab">10.3 Cetak kop surat resmi</h2>
+  <p>Klik ikon <strong>printer</strong> pada baris surat — jendela baru menampilkan <strong>kop surat resmi PERBASI Tanah Laut</strong> (logo, nama organisasi, alamat, telepon), nomor–lampiran–perihal, tanggal, isi surat, dan blok tanda tangan pejabat penandatangan — lalu langsung membuka dialog cetak A4.</p>
+
+  <h2 class="sub-bab">10.4 Arsip &amp; export</h2>
+  <p>Semua surat terarsip rapi: cari dengan kata kunci, filter per bidang/sifat/tahun, cetak ulang, ubah, atau hapus. Tombol <strong>CSV</strong> mengunduh arsip sesuai filter. Nomor yang sudah terbit tidak berubah; bila tahun pada tanggal diubah, nomor dapat dibuat ulang (centang “Buat ulang nomor” pada formulir ubah).</p>
+  <div class="kotak info">
+    <h3>Urutan nomor dijamin server</h3>
+    Nomor diterbitkan saat menyimpan — aman meski dua pengurus membuat surat bersamaan; keduanya mendapat nomor berbeda (tidak pernah bentrok). Nomor berjalan urut per tahun dan kembali ke 001 setiap tahun baru.
+  </div>
+</section>
+
+<!-- ══════════════ BAB 11 ══════════════ -->
+<section class="page halaman bab">
+  <h1 class="judul-bab"><span class="no-bab">Bab 11</span>Pengaturan, Pengguna &amp; Backup Database</h1>
+  <div class="gambar">
+    <img src="images/ebook-pengaturan.png" alt="Menu pengaturan" />
+    <div class="caption"><b>Gambar 11.1</b> — Tab Pengaturan → Organisasi</div>
+  </div>
+
+  <h2 class="sub-bab">11.1 Tab Organisasi</h2>
+  <p>Mengelola identitas resmi organisasi: nama, tagline, alamat, telepon, email, nominal iuran default, serta <strong>Kode Klasifikasi &amp; Kode Organisasi</strong> pada nomor surat (default <code>400.4.1</code> dan <code>PERBASASI-TALA</code>) dan nama pejabat penandatangan kop surat.</p>
+
+  <h2 class="sub-bab">11.2 Tab Keamanan</h2>
+  <p>Ganti password akun Anda (lihat Bab 2). Tampilan ini juga menunjukkan username &amp; peran Anda saat ini.</p>
+
+  <h2 class="sub-bab">11.3 Tab Pengguna — khusus admin</h2>
+  <ul class="rapi">
+    <li><strong>Tambah pengguna</strong>: isi username, password awal (min. 6 karakter), nama lengkap, peran (bendahara/admin).</li>
+    <li><strong>Ubah pengguna</strong>: ganti nama, peran, atau menonaktifkan akun (nonaktif = tidak bisa login, data tetap ada).</li>
+    <li><strong>Reset password</strong>: administrator dapat menyetel ulang password pengguna (misal jika lupa).</li>
+    <li>Sistem menolak penghapusan <strong>semua</strong> admin aktif — minimal satu admin selalu tersisa.</li>
+  </ul>
+
+  <h2 class="sub-bab">11.4 Tab Audit Log — khusus admin</h2>
+  <p>Daftar 100 aktivitas terakhir: siapa, kapan, dan apa yang dilakukan (login, tambah/ubah/hapus data, ganti pengaturan, backup). Berguna untuk menelusuri “siapa yang menghapus transaksi itu?”.</p>
+
+  <h2 class="sub-bab">11.5 Tab Backup — cara aman mem-backup database</h2>
+  <div class="langkah">
+    <div class="item"><span>Menu <strong>Pengaturan → Backup</strong> → klik <strong>Unduh Backup Sekarang</strong>.</span></div>
+    <div class="item"><span>File <code>backup-perbasasi_….db</code> terunduh — simpan di dua tempat berbeda (misal flashdisk + Google Drive/kirim ke email pribadi).</span></div>
+    <div class="item"><span>Lakukan minimal <strong>seminggu sekali</strong> dan selalu setelah rapat keuangan.</span></div>
+  </div>
+  <div class="kotak aman">
+    <h3>Mengapa backup penting?</h3>
+    Database adalah satu-satunya salinan seluruh data keuangan &amp; arsip surat organisasi. Backup adalah asuransi termurah dan tercepat ketika perangkat rusak atau terserang virus.
+  </div>
+
+  <h2 class="sub-bab">11.6 Mengembalikan (restore) backup</h2>
+  <p>Restore dilakukan administrator TI: matikan aplikasi → salin file backup menjadi <code>data/perbasasi.db</code> → jalankan kembali aplikasi. Seluruh data kembali seperti saat backup diunduh.</p>
+</section>
+
+<!-- ══════════════ BAB 12 ══════════════ -->
+<section class="page halaman bab">
+  <h1 class="judul-bab"><span class="no-bab">Bab 12</span>Mode Gelap &amp; Kustomisasi Tampilan</h1>
+  <div class="gambar">
+    <img src="images/ebook-dark.png" alt="Mode gelap" />
+    <div class="caption"><b>Gambar 12.1</b> — Tampilan mode gelap</div>
+  </div>
+  <p>Klik ikon matahari/bulan di bilah atas untuk berganti <strong>terang/gelap</strong> — cocok untuk operasional malam. Preferensi tersimpan di perangkat masing-masing (tidak mengubah tampilan pengurus lain).</p>
+  <p>Di ponsel, seluruh menu mengecil menjadi ikon — ketuk ikon garis (burger) di kiri atas untuk membuka/tutup sidebar.</p>
+</section>
+
+<!-- ══════════════ BAB 13 ══════════════ -->
+<section class="page halaman bab">
+  <h1 class="judul-bab"><span class="no-bab">Bab 13</span>Tanya Jawab (FAQ) &amp; Solusi Masalah</h1>
+
+  <div class="kotak">
+    <h3>Aplikasi tidak bisa dibuka</h3>
+    <p style="margin-bottom:6px"><strong>“This site can’t be reached”</strong> → aplikasi di komputer server belum berjalan. Mintalah administrator menjalankan <code>npm start</code> di komputer sekretariat.</p>
+    <p style="margin-bottom:0"><strong>Dari HP tapi gagal</strong> → pastikan alamat yang dipakai benar; jika memakai URL daring, tanyakan ke admin apakah server sedang aktif.</p>
+  </div>
+  <div class="kotak">
+    <h3>“Endpoint tidak ditemukan” saat membuka menu</h3>
+    <p style="margin-bottom:0">Biasanya aplikasi di server adalah versi lama. Minta administrator menghentikan lalu menjalankan ulang aplikasi (<code>Ctrl+C</code> kemudian <code>npm start</code>), lalu refresh layar dengan <code>Ctrl+Shift+R</code>.</p>
+  </div>
+  <div class="kotak">
+    <h3>“Username atau password salah” / “Terlalu banyak percobaan login”</h3>
+    <p style="margin-bottom:0">Periksa Caps Lock dan penggunaan spasi. Jika terblokir, tunggu 10 menit atau minta admin mereset password Anda (Pengaturan → Pengguna → Reset Password).</p>
+  </div>
+  <div class="kotak">
+    <h3>Nomor surat muncul ganda / lompat</h3>
+    <p style="margin-bottom:0">Nomor diterbitkan server secara berurutan; nomor yang dihapus tidak dipakai ulang — ini normal dan justru baik untuk arsip (jejak audit). Bila harus mengganti, admin dapat menghapus surat salah dan membuat ulang; nomor berikutnya tetap berjalan dari yang tertinggi.</p>
+  </div>
+  <div class="kotak">
+    <h3>Saldo kas tampak salah</h3>
+    <p style="margin-bottom:0">Saldo = saldo awal + mutasi transaksi. Periksa transaksi dengan filter <em>Semua kas</em>, perhatikan kategori dan kas yang tercatat. Jika saldonya tetap aneh, bandingkan dengan buku kas fisik — perbedaan paling sering berasal dari transaksi yang belum diinput.</p>
+  </div>
+  <div class="kotak">
+    <h3>Cetak surat/laporan tidak muncul preview</h3>
+    <p style="margin-bottom:0">Izinkan <strong>popup</strong> di browser untuk alamat aplikasi. Alternatif: unduh CSV lalu cetak dari Excel.</p>
+  </div>
+  <div class="kotak">
+    <h3>Layar muncul kosong/“Memuat…” terus</h3>
+    <p style="margin-bottom:0">Refresh dengan <code>Ctrl+Shift+R</code>. Jika masih sama, keluar lalu login kembali. Bila berulang, hubungi administrator — kemungkinan aplikasi perlu dijalankan ulang.</p>
+  </div>
+  <div class="kotak info">
+    <h3>Kontak bantuan</h3>
+    Laporkan kendala teknis ke administrator TI organisasi beserta: (1) jam kejadian, (2) menu yang dibuka, (3) pesan error yang muncul persis, (4) screenshot bila memungkinkan.
+  </div>
+</section>
+
+<!-- ══════════════ LAMPIRAN A ══════════════ -->
+<section class="page halaman">
+  <h1 class="judul-bab"><span class="no-bab">Lampiran A</span>Format Nomor Surat &amp; Daftar Bidang</h1>
+  <h2 class="sub-bab">A.1 Struktur nomor surat keluar</h2>
+  <table>
+    <thead><tr><th>Komponen</th><th>Contoh</th><th>Keterangan</th></tr></thead>
+    <tbody>
+      <tr><td>Kode klasifikasi</td><td><code>400.4.1</code></td><td>Kode klasifikasi persuratan organisasi (dapat diubah di Pengaturan → Organisasi → <em>Kode Klasifikasi Surat</em>)</td></tr>
+      <tr><td>Nomor urut</td><td><code>001</code> – <code>999</code></td><td>3 digit, berjalan per tahun, reset ke 001 setiap 1 Januari</td></tr>
+      <tr><td>Kode organisasi</td><td><code>PERBASASI-TALA</code></td><td>Kode resmi organisasi (dapat diubah di Pengaturan → Organisasi → <em>Kode Organisasi di Nomor Surat</em>)</td></tr>
+      <tr><td>Tahun</td><td><code>2026</code></td><td>Tahun terbit surat</td></tr>
+    </tbody>
+  </table>
+  <p style="text-align:center; font-family: 'Cascadia Code', Consolas, monospace; font-size:17px; background:var(--panel); border:1px solid var(--garis); border-radius:8px; padding:12px;">400.4.1/001/PERBASASI-TALA/2026</p>
+
+  <h2 class="sub-bab">A.2 Bidang yang tersedia</h2>
+  <table>
+    <thead><tr><th>Kode</th><th>Bidang</th><th>Lingkup</th></tr></thead>
+    <tbody>
+      <tr><td>OR</td><td>Bidang Olahraga</td><td>Kegiatan olahraga &amp; pertandingan (tim, latihan, event internal)</td></tr>
+      <tr><td>KP</td><td>Bidang Kepelatihan</td><td>Pelatihan, sertifikasi &amp; pembinaan pelatih</td></tr>
+      <tr><td>WP</td><td>Bidang Wasit &amp; Pertandingan</td><td>Pengadaan &amp; pengawasan pertandingan, wasit, dan sistem pertandingan</td></tr>
+      <tr><td>PB</td><td>Bidang Pembinaan &amp; Usia Dini</td><td>Pembinaan kelompok usia dini &amp; sekolah binaan</td></tr>
+      <tr><td>ADM</td><td>Administrasi &amp; Kesekretariatan</td><td>Surat menyurat, administrasi &amp; rumah tangga organisasi</td></tr>
+    </tbody>
+  </table>
+  <p class="qr-note">Administrator dapat menambah/mengubah/menghapus bidang lewat menu <strong>Kas &amp; Kategori → Kelola Kategori &amp; Bidang</strong>.</p>
+</section>
+
+<!-- ══════════════ LAMPIRAN B ══════════════ -->
+<section class="page halaman">
+  <h1 class="judul-bab"><span class="no-bab">Lampiran B</span>Ringkasan Menu &amp; Hak Akses</h1>
+  <table>
+    <thead><tr><th>Menu</th><th>Bendahara</th><th>Admin</th></tr></thead>
+    <tbody>
+      <tr><td>Dashboard, Transaksi, Anggota, Iuran, Laporan, Persuratan</td><td>✓ penuh</td><td>✓ penuh</td></tr>
+      <tr><td>Kas &amp; Kategori (tambah/ubah)</td><td>✓</td><td>✓</td></tr>
+      <tr><td>Hapus Kas / Kategori</td><td>—</td><td>✓</td></tr>
+      <tr><td>Hapus Anggota</td><td>—</td><td>✓</td></tr>
+      <tr><td>Hapus Bidang Surat</td><td>—</td><td>✓</td></tr>
+      <tr><td>Kelola Pengguna (tambah/ubah/reset password)</td><td>—</td><td>✓</td></tr>
+      <tr><td>Audit Log</td><td>—</td><td>✓</td></tr>
+      <tr><td>Backup &amp; unduh database</td><td>—</td><td>✓</td></tr>
+      <tr><td>Ubah Pengaturan Organisasi &amp; Nomor Surat</td><td>✓</td><td>✓</td></tr>
+      <tr><td>Ganti password sendiri</td><td>✓</td><td>✓</td></tr>
+    </tbody>
+  </table>
+  <div class="kotak aman" style="margin-top:22px">
+    <h3>Komitmen pengurus</h3>
+    Dengan menerima akun ini, Anda berkomitmen menjaga kerahasiaan password, mencatat setiap transaksi jujur dan tepat waktu, dan melaporkan seluruh penggunaan dana kepada rapat pengurus. Aplikasi memudahkan pertanggungjawaban — namun kejujuran penguruslah yang membuatnya bermakna.
+  </div>
+  <div class="footer-dok">
+    <span>PERBASI Tanah Laut — Panduan Aplikasi Bendahara · Edisi 1 · 2026</span>
+    <span>Dokumen diterbitkan oleh Sekretariat PERBASI Tanah Laut</span>
+  </div>
+</section>
+
+</body>
+</html>
